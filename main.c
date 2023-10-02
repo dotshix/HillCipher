@@ -6,6 +6,7 @@
 // function declerations
 int **getKey(const char *filename, int *key_length);
 char *getPlaintext(const char *filename);
+void addPadding(char **plaintext, int key_length);
 
 int main(int argc, char *argv[]) {
     // check if proper parameters set
@@ -33,22 +34,7 @@ int main(int argc, char *argv[]) {
     // print plaintext for debugging
     printf("%s\n", plaintext);
 
-    plaintext_length = strlen(plaintext);
-    if (plaintext_length % key_length != 0) {
-        // add padding
-        int remainder = key_length - (plaintext_length % key_length); // Calculate how many characters are needed for padding
-        char *padding = malloc(sizeof(char) * (remainder + 1)); // Allocate memory for padding
-
-        for (int i = 0; i < remainder; i++) {
-            padding[i] = 'x';
-        }
-
-        padding[remainder] = '\0'; // Terminate the padding string correctly
-
-        // Concatenate the padding to the plaintext
-        strcat(plaintext, padding);
-        free(padding);
-    }
+    addPadding(&plaintext, key_length);
 
     // print plaintext for debugging
     printf("%s\n", plaintext);
@@ -112,4 +98,31 @@ char *getPlaintext(const char *filename){
 
     plaintext[i] = '\0';
     return plaintext;
+}
+
+void addPadding(char **plaintext, int key_length) {
+    int plaintext_length = strlen(*plaintext);
+
+    if (plaintext_length % key_length != 0) {
+        // Calculate how many characters are needed for padding
+        int remainder = key_length - (plaintext_length % key_length);
+
+        // Allocate memory for padding
+        char *padding = malloc(sizeof(char) * (remainder + 1));
+
+        // Fill the padding with 'x' characters
+        for (int i = 0; i < remainder; i++) {
+            padding[i] = 'x';
+        }
+
+        // Terminate the padding string correctly
+        padding[remainder] = '\0';
+
+        // Concatenate the padding to the plaintext
+        *plaintext = realloc(*plaintext, plaintext_length + remainder + 1);
+        strcat(*plaintext, padding);
+
+        // Free the memory allocated for padding
+        free(padding);
+    }
 }
