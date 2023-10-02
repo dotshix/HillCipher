@@ -6,6 +6,7 @@
 // function declerations
 int **getKey(const char *filename, int *key_length);
 char *getPlaintext(const char *filename);
+char *encrypt(char *input, int **key, int key_length);
 void addPadding(char **plaintext, int key_length);
 
 int main(int argc, char *argv[]) {
@@ -17,6 +18,7 @@ int main(int argc, char *argv[]) {
 
     int **key;
     char *plaintext;
+    char *output;
     int key_length;
     int plaintext_length;
 
@@ -40,7 +42,15 @@ int main(int argc, char *argv[]) {
     printf("%s\n", plaintext);
     printf("%d\n", key_length);
 
+    output = encrypt(plaintext, key, key_length);
+    printf("%s", output);
+
+    for(int i = 0; i < key_length; i++){
+        free(key[i]);
+    }
+    free(key);
     free(plaintext);
+    free(output);
     return 0;
 }
 
@@ -125,4 +135,38 @@ void addPadding(char **plaintext, int key_length) {
         // Free the memory allocated for padding
         free(padding);
     }
+}
+
+// Function to encrypt a 3x3 Hill Cipher
+char *encrypt(char *input, int **key, int key_length) {
+    int len = strlen(input);
+    int inc = key_length;
+    char *output = malloc(sizeof(char) * (len + 1)); // +1 for the null terminator
+    output[len] = '\0';
+
+        int *plain = malloc(sizeof(int) * inc);
+        int *cipher = malloc(sizeof(int) * inc);
+    for (int i = 0; i < len; i += inc) {
+
+        for (int j = 0; j < inc; j++) {
+            plain[j] = input[i + j] - 'a';
+        }
+
+        for (int x = 0; x < inc; x++) {
+            cipher[x] = 0;
+            for (int y = 0; y < inc; y++) {
+                cipher[x] += (key[x][y] * plain[y]);
+            }
+            cipher[x] %= 26; // Apply modulus operation
+        }
+
+        for (int j = 0; j < inc; j++) {
+            output[i + j] = cipher[j] + 'a';
+        }
+
+    }
+
+        free(plain);
+        free(cipher);
+    return output;
 }
