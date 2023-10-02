@@ -17,6 +17,7 @@ int main(int argc, char *argv[]) {
     int **key;
     char *plaintext;
     int key_length;
+    int plaintext_length;
 
     key = getKey(argv[1], &key_length);
     plaintext = getPlaintext(argv[2]);
@@ -32,6 +33,28 @@ int main(int argc, char *argv[]) {
     // print plaintext for debugging
     printf("%s\n", plaintext);
 
+    plaintext_length = strlen(plaintext);
+    if (plaintext_length % key_length != 0) {
+        // add padding
+        int remainder = key_length - (plaintext_length % key_length); // Calculate how many characters are needed for padding
+        char *padding = malloc(sizeof(char) * (remainder + 1)); // Allocate memory for padding
+
+        for (int i = 0; i < remainder; i++) {
+            padding[i] = 'x';
+        }
+
+        padding[remainder] = '\0'; // Terminate the padding string correctly
+
+        // Concatenate the padding to the plaintext
+        strcat(plaintext, padding);
+        free(padding);
+    }
+
+    // print plaintext for debugging
+    printf("%s\n", plaintext);
+    printf("%d\n", key_length);
+
+    free(plaintext);
     return 0;
 }
 
@@ -76,7 +99,7 @@ char *getPlaintext(const char *filename){
         return NULL; // Error opening the file
     }
 
-    char *plaintext = malloc(sizeof(char) * 10000);
+    char *plaintext = malloc(sizeof(char) * 10000 + 1);
     char ch;
     int i = 0;
     while((ch = fgetc(file)) != EOF){
