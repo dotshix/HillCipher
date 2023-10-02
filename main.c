@@ -5,10 +5,9 @@
 
 // function declerations
 int **getKey(const char *filename, int *key_length);
-char *grabPlaintext(const char *filename);
+char *getPlaintext(const char *filename);
 
 int main(int argc, char *argv[]) {
-
     // check if proper parameters set
     if(argc < 2){
         printf("usage: %s key plaintext\n", argv[0]);
@@ -20,7 +19,7 @@ int main(int argc, char *argv[]) {
     int key_length;
 
     key = getKey(argv[1], &key_length);
-    plaintext = grabPlaintext(argv[2]);
+    plaintext = getPlaintext(argv[2]);
 
     // print key for debuging
     for(int i = 0; i < 2; i++){
@@ -70,7 +69,7 @@ int **getKey(const char *filename, int *key_length) {
 
 // function to grab plaintext from file
 // only grabs letters
-char *grabPlaintext(const char *filename){
+char *getPlaintext(const char *filename){
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         perror("Error opening file");
