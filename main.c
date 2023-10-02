@@ -4,7 +4,7 @@
 #include <ctype.h>
 
 // function declerations
-int **getKey(const char *filename);
+int **getKey(const char *filename, int *key_length);
 char *grabPlaintext(const char *filename);
 
 int main(int argc, char *argv[]) {
@@ -17,9 +17,10 @@ int main(int argc, char *argv[]) {
 
     int **key;
     char *plaintext;
+    int key_length;
 
-    key = getKey(argv[1]);
-
+    key = getKey(argv[1], &key_length);
+    plaintext = grabPlaintext(argv[2]);
 
     // print key for debuging
     for(int i = 0; i < 2; i++){
@@ -29,14 +30,15 @@ int main(int argc, char *argv[]) {
         printf("\n");
     }
 
-    plaintext = grabPlaintext(argv[2]);
+    // print plaintext for debugging
     printf("%s\n", plaintext);
 
     return 0;
 }
 
 // function to grab key from file
-int **getKey(const char *filename) {
+// also gets the key_length for the user
+int **getKey(const char *filename, int *key_length) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         perror("Error opening file");
@@ -49,6 +51,7 @@ int **getKey(const char *filename) {
 
     // grab first number to get proper size and create char array for key
     fscanf(file, "%d", &size);
+    *key_length = size;
     key = malloc(sizeof(int *) * size);
     for(int i = 0; i < size; i++){
         key[i] = malloc(sizeof(int) * size);
