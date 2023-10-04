@@ -1,3 +1,25 @@
+
+/*============================================================================
+| Assignment: pa01 - Encrypting a plaintext file using the Hill cipher
+|
+| Author: Dario Sansotta
+| Language: c
+|
+| To Compile: gcc -o pa01 pa01.c
+|
+| To Execute: ./pa01 kX.txt pX.txt
+|
+| where kX.txt is the keytext file
+| and pX.txt is plaintext file
+| Note:
+| All input files are simple 8 bit ASCII input
+| All execute commands above have been tested on Eustis
+|
+| Class: CIS3360 - Security in Computing - Fall 2023
+| Instructor: McAlpin
+| Due Date: 8/10/2023
++===========================================================================*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,12 +53,7 @@ int main(int argc, char *argv[]) {
 
     addPadding(&plaintext, key_length);
 
-    // print plaintext for debugging
-    /* printf("%s\n", plaintext); */
-    /* printf("%d\n", key_length); */
-
     res = encrypt(plaintext, key, key_length);
-    /* printf("%s", output); */
 
     printText(plaintext, res);
 
@@ -106,6 +123,7 @@ char *getPlaintext(const char *filename){
     return plaintext;
 }
 
+// function to add padding if needed
 void addPadding(char **plaintext, int key_length) {
     int plaintext_length = strlen(*plaintext);
 
@@ -178,6 +196,7 @@ void printKey(int **key, int key_length){
     }
 }
 
+// simple functiont to print plaintext and ciphertext
 void printText(char *plaintext, char *output){
     printf("\nPlaintext: \n");
 
@@ -207,3 +226,12 @@ void printText(char *plaintext, char *output){
 
     printf("\n");
 }
+
+/*=============================================================================
+| I Dario Sansotta (da370852) affirm that this program is
+| entirely my own work and that I have neither developed my code together with
+| any another person, nor copied any code from any other person, nor permitted
+| my code to be copied or otherwise used by any other person, nor have I
+| copied, modified, or otherwise used programs created by others. I acknowledge
+| that any violation of the above terms will be treated as academic dishonesty.
++=============================================================================*/
