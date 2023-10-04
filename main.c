@@ -8,6 +8,8 @@ int **getKey(const char *filename, int *key_length);
 char *getPlaintext(const char *filename);
 char *encrypt(char *input, int **key, int key_length);
 void addPadding(char **plaintext, int key_length);
+void printKey(int **key, int key_length);
+void printText(char *plaintext, char *output);
 
 int main(int argc, char *argv[]) {
     // check if proper parameters set
@@ -18,39 +20,33 @@ int main(int argc, char *argv[]) {
 
     int **key;
     char *plaintext;
-    char *output;
+    char *res;
     int key_length;
     int plaintext_length;
 
     key = getKey(argv[1], &key_length);
     plaintext = getPlaintext(argv[2]);
 
-    // print key for debuging
-    for(int i = 0; i < 2; i++){
-        for(int j = 0; j < 2; j++){
-            printf("%d ", key[i][j]);
-        }
-        printf("\n");
-    }
-
-    // print plaintext for debugging
-    printf("%s\n", plaintext);
+    printKey(key, key_length);
 
     addPadding(&plaintext, key_length);
 
     // print plaintext for debugging
-    printf("%s\n", plaintext);
-    printf("%d\n", key_length);
+    /* printf("%s\n", plaintext); */
+    /* printf("%d\n", key_length); */
 
-    output = encrypt(plaintext, key, key_length);
-    printf("%s", output);
+    res = encrypt(plaintext, key, key_length);
+    /* printf("%s", output); */
+
+    printText(plaintext, res);
 
     for(int i = 0; i < key_length; i++){
         free(key[i]);
     }
+
     free(key);
     free(plaintext);
-    free(output);
+    free(res);
     return 0;
 }
 
@@ -169,4 +165,45 @@ char *encrypt(char *input, int **key, int key_length) {
         free(plain);
         free(cipher);
     return output;
+}
+
+// function to print matrix key
+void printKey(int **key, int key_length){
+    printf("\nKey matrix:\n");
+    for(int i = 0; i < key_length; i++){
+        for(int j = 0; j < key_length; j++){
+            printf("%4d ", key[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void printText(char *plaintext, char *output){
+    printf("\nPlaintext: \n");
+
+    int b = 0;
+    while(*plaintext){
+        if(b == 80){
+            printf("\n");
+            b = 0;
+        }
+        printf("%c", *plaintext);
+        plaintext++;
+        b++;
+    }
+
+    printf("\n\nCiphertext:\n");
+    b = 0;
+
+    while(*output){
+        if(b == 80){
+            printf("\n");
+            b = 0;
+        }
+        printf("%c", *output);
+        output++;
+        b++;
+    }
+
+    printf("\n");
 }
