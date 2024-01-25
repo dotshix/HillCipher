@@ -13,7 +13,6 @@
 | and pX.txt is plaintext file
 | Note:
 | All input files are simple 8 bit ASCII input
-| All execute commands above have been tested on Eustis
 |
 | Class: CIS3360 - Security in Computing - Fall 2023
 | Instructor: McAlpin
